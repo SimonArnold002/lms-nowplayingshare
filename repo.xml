@@ -1,18 +1,15 @@
-<?xml version="1.0"?>
 <extensions>
   <details>
     <title lang="EN">NowPlayingShare for Lyrion Music Server</title>
   </details>
   <plugins>
-    <plugin name="NowPlayingShare" version="2.0.0" target="unix" minTarget="9.0.0" maxTarget="*">
+    <plugin name="NowPlayingShare" version="2.0.0" minTarget="9.0.0" maxTarget="*">
       <title lang="EN">Now Playing Share</title>
       <desc lang="EN">Generate a shareable card image from your currently playing track. Shows album art, track title, artist and album with streaming service logo.</desc>
-      <category>misc</category>
-      <changes lang="EN">v2.0.0 - Major cleanup. Dark theme always on. Service logos from Material Skin. Bandcamp support. Clean rounded corners.</changes>
+      <url>https://github.com/SimonArnold002/lms-nowplayingshare/raw/main/NowPlayingShare-plugin.zip</url>
       <creator>CrystalGipsy</creator>
       <email></email>
-      <url>https://SimonArnold002.github.io/lms-nowplayingshare/NowPlayingShare-plugin.zip</url>
-      <sha>8ee9f389cbc0555c099cf7dff9dd9cfc4a5dea56</sha>
+      <sha>1220FAEF080B02BAE686321F8A68EADDED8AEA2F</sha>
     </plugin>
   </plugins>
 </extensions>
