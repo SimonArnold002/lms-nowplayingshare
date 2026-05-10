@@ -3,13 +3,13 @@
     <title lang="EN">NowPlayingShare for Lyrion Music Server</title>
   </details>
   <plugins>
-    <plugin name="NowPlayingShare" version="2.2.8" minTarget="9.0.0" maxTarget="*">
+    <plugin name="NowPlayingShare" version="2.3.5" minTarget="9.0.0" maxTarget="*">
       <title lang="EN">Now Playing Share</title>
       <desc lang="EN">Generate a shareable card image from your currently playing track. Shows album art, track title, artist and album with streaming service logo.</desc>
       <url>https://github.com/SimonArnold002/lms-nowplayingshare/raw/main/NowPlayingShare-plugin.zip</url>
       <creator>CrystalGipsy</creator>
       <email></email>
-      <sha>35e624567c2dbe6cbde93ad32dbb07d844f50575</sha>
+      <sha>d95c2be02cffe35881b03efa540a4255ecaa2274</sha>
     </plugin>
   </plugins>
 </extensions>
