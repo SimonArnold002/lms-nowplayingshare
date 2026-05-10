@@ -1,0 +1,20 @@
+PLUGIN_NOW_PLAYING_SHARE
+	EN	Now Playing Share
+
+PLUGIN_NOW_PLAYING_SHARE_DESC
+	EN	Generate a shareable image of your currently playing track.
+
+PLUGIN_NOW_PLAYING_SHARE_GENERATE
+	EN	Generate Share Image
+
+PLUGIN_NOW_PLAYING_SHARE_COPY
+	EN	Copy Image
+
+PLUGIN_NOW_PLAYING_SHARE_COPIED
+	EN	Copied!
+
+PLUGIN_NOW_PLAYING_SHARE_NOTHING_PLAYING
+	EN	Nothing is currently playing.
+
+PLUGIN_NOW_PLAYING_SHARE_SELECT_PLAYER
+	EN	Select a player above to generate a share image.

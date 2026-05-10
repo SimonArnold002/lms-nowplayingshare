@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Now Playing Share v2.4.6 - Lyrion</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { overflow-x: hidden; max-width: 100vw; }
+
+/* Material Skin colour palette */
+:root {
+  --msk-bg:       #303030;       /* Material dark background */
+  --msk-surface:  #424242;       /* Card/surface colour */
+  --msk-border:   #555555;       /* Subtle border */
+  --msk-accent:   #c9a84c;       /* Material Skin gold accent */
+  --msk-text:     #ffffff;       /* Primary text */
+  --msk-text2:    rgba(255,255,255,0.85);  /* Secondary text */
+  --msk-text3:    rgba(255,255,255,0.7); /* Tertiary/dim text */
+  --radius:       4px;           /* Material uses small radius */
+}
+
+body {
+  background: var(--msk-bg);
+  color: var(--msk-text);
+  font-family: 'Roboto', sans-serif;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 2rem 1rem 4rem;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+header {
+  width: 100%; max-width: 680px;
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;
+}
+.logo {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; color: #ffffff;
+}
+header h1 { font-size: 1.25rem; font-weight: 500; letter-spacing: 0.01em; color: var(--msk-text); }
+header p  { font-size: 0.78rem; color: rgba(255,255,255,0.7); margin-top: 2px; font-weight: 300; }
+
+.controls {
+  width: 100%; max-width: 680px;
+  display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;
+}
+@media (max-width: 480px) {
+  .controls { flex-direction: column; }
+  .controls > * { width: 100% !important; }
+}
+
+select, button {
+  font-family: 'Roboto', sans-serif; font-size: 0.875rem;
+  border-radius: var(--radius); border: 1px solid var(--msk-border);
+  background: var(--msk-surface); color: var(--msk-text);
+  padding: 0.6rem 1rem; cursor: pointer; transition: background 0.2s;
+}
+select { flex: 1; min-width: 180px; }
+select:focus, button:focus { outline: 2px solid rgba(255,255,255,0.5); outline-offset: 2px; }
+.btn-primary {
+  background: #ffffff; color: #1a1a1a;
+  border-color: #ffffff; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem;
+}
+.btn-primary:hover { background: rgba(255,255,255,0.85); }
+
+
+#preview-wrap {
+  width: 100%;
+  max-width: 680px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.placeholder { color: rgba(255,255,255,0.7); font-size: 0.9rem; text-align: center; line-height: 1.7; font-weight: 300; }
+.placeholder span { display: block; font-size: 2rem; margin-bottom: 0.5rem; }
+
+/* Scale wrapper: card is 1200x630, preview at 680px wide */
+
+/* ════════════════════════════════
+   SHARE CARD — 1200 x 630 px
+   ════════════════════════════════ */
+
+/* Art panel — left 38% */
+.card-art-img img {
+  width: 360px; height: 360px;
+  border-radius: 4px; object-fit: cover;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.7);
+  position: relative; z-index: 1;
+}
+
+/* Text panel — right 62% */
+
+/* "NOW PLAYING" label — matches Material Skin section headers */
+
+/* Track title — large, Roboto bold, like Material NP screen */
+
+/* Thin accent rule — Material Skin uses the gold colour as accent */
+
+/* "by Artist" — matches Material "by Rostam" style */
+
+/* "from Album (Year)" — matches Material "from Album" style */
+
+/* Player bar — full width bottom strip */
+
+/* ── DARK theme — matches Material Skin dark mode exactly ── */
+
+/* ── OLIVE theme — matches Material Skin olive/khaki toolbar ── */
+
+/* ── MIDNIGHT theme — deep dark with gold ── */
+
+#action-row { width: 100%; max-width: 680px; margin-top: 1rem; display: none; gap: 0.75rem; flex-wrap: wrap; }
+#action-row.visible { display: flex; }
+#action-row button { flex: 1; min-width: 140px; }
+@media (max-width: 480px) {
+  #action-row button { width: 100%; flex: none; }
+  }
+#status { font-size: 0.78rem; color: rgba(255,255,255,0.7); margin-top: 0.75rem; min-height: 1.2em; text-align: center; font-weight: 300; }
+.tip {
+  width: 100%; max-width: 680px; background: var(--msk-surface);
+  border: 1px solid var(--msk-border); border-radius: var(--radius);
+  padding: 1rem 1.25rem; font-size: 0.78rem; color: rgba(255,255,255,0.7);
+  margin-top: 2rem; line-height: 1.7; font-weight: 300;
+}
+.tip strong { color: var(--msk-text); font-weight: 500; }
+.tip code { background: rgba(201,168,76,0.12); color: var(--msk-accent); border-radius: 2px; padding: 1px 5px; font-size: 0.76rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">&#9835;</div>
+  <div>
+    <h1>Now Playing Share</h1>
+    <p>Generate a shareable card from the current track &nbsp;<span style="opacity:0.35">v2.4.6</span></p>
+  </div>
+</header>
+<div class="controls">
+  <div id="player-display" style="flex:1;padding:0.6rem 1rem;border-radius:4px;border:1px solid var(--msk-border);background:var(--msk-surface);color:rgba(255,255,255,0.9);font-size:0.875rem;font-weight:300;display:flex;align-items:center;justify-content:space-between;gap:0.5rem;">
+    <span id="player-status">Detecting active player...</span>
+    <span id="btn-change-player" title="Switch player for this session" style="font-size:0.72rem;color:var(--msk-accent);cursor:pointer;white-space:nowrap;letter-spacing:0.06em;text-transform:uppercase;font-weight:500;display:none;" onclick="showPlayerPicker()">Change</span>
+  </div>
+
+</div>
+
+<!-- Player picker modal -->
+<div id="player-picker" style="display:none;width:100%;max-width:680px;background:var(--msk-surface);border:1px solid var(--msk-border);border-radius:4px;padding:1rem;margin-bottom:0.75rem;">
+  <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--msk-accent);font-weight:500;margin-bottom:0.75rem;">Select player for this session</div>
+  <div id="player-list" style="display:flex;flex-direction:column;gap:0.4rem;"></div>
+  <div style="margin-top:0.75rem;">
+    <span onclick="hidePlayerPicker()" style="font-size:0.75rem;color:rgba(255,255,255,0.7);cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;">Cancel</span>
+  </div>
+</div>
+
+<div id="card-hint" style="display:none;width:100%;max-width:680px;font-size:0.78rem;color:rgba(255,255,255,0.8);font-weight:400;letter-spacing:0.02em;margin-bottom:0.6rem;">
+  Right-click the image &rarr; Copy Image, then paste anywhere. Or use Save Image to download.
+</div>
+<div id="preview-wrap">
+  <div class="placeholder">
+    <span>&#127925;</span>
+    Select a player and press <strong>Generate Card</strong>
+  </div>
+</div>
+<div id="action-row">
+  <button class="btn-primary" id="btn-generate" style="display:none">Generate Card</button>
+  <button id="btn-autorefresh" style="display:none">&#9654; Auto</button>
+  <button class="btn-primary" id="btn-download">Save Image</button>
+</div>
+<div id="status"></div>
+<template id="card-tpl">
+  <div id="share-card">
+    <div class="card-art-panel">
+      <div class="card-art-bg" id="card-art-bg"></div>
+      <div class="card-art-overlay"></div>
+      <div class="card-art-img">
+        <img id="card-art-img" src="" alt="Album Art" crossorigin="anonymous">
+      </div>
+    </div>
+    <div class="card-text-panel">
+      <div class="card-now-playing">Now Playing</div>
+      <div class="card-title" id="card-title"></div>
+      <div class="card-divider"></div>
+      <div class="card-by-line">
+        <span class="card-by-label">by</span>
+        <span class="card-artist" id="card-artist"></span>
+      </div>
+      <div class="card-from-line">
+        <span class="card-from-label">from</span>
+        <span class="card-album" id="card-album"></span>
+        <span class="card-year" id="card-year"></span>
+      </div>
+    </div>
+    <div class="card-player-bar">
+      <div class="card-player-icon">&#9835;</div>
+      <span class="card-player-label">Playing from</span>
+      <span class="card-player-sep">&middot;</span>
+      <span class="card-player-name" id="card-player-name"></span>
+      <span class="card-player-sep">&middot;</span>
+      <span class="card-player-label">Lyrion Music Server</span>
+    </div>
+  </div>
+</template>
+<div class="tip">
+  <strong>Tip:</strong> Bookmark
+  <code>http://[lms-ip]:9000/plugins/NowPlayingShare/index.html?player=PLAYERID</code>
+  to open with your player pre-selected.
+</div>
+<script>
+var LMS_BASE = window.location.origin;
+var RPC_URL  = LMS_BASE + '/jsonrpc.js';
+
+function setStatus(msg, color) {
+  var el = document.getElementById('status');
+  el.textContent = msg; el.style.color = color || 'rgba(255,255,255,0.8)';
+}
+function lmsRpc(player, params) {
+  return fetch(RPC_URL, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: 1, method: 'slim.request', params: [player, params] })
+  }).then(function(r) { if (!r.ok) throw new Error('RPC ' + r.status); return r.json(); });
+}
+var activePlayerId   = null;
+var activePlayerName = null;
+
+var playerPollTimer  = null;
+var urlForcedPlayer  = new URLSearchParams(location.search).get('player');
+var regenDebounce    = null;
+var SESSION_KEY      = 'nps_player_id';
+var SESSION_NAME_KEY = 'nps_player_name';
+var allKnownPlayers  = [];  // cache of all players for the picker
+
+// ── Session-isolated player management ───────────────────────
+// Each browser tab stores its own player in sessionStorage.
+// This means concurrent Material Skin users on different devices
+// each get an independent session — no cross-contamination.
+
+function getSessionPlayer() {
+  try {
+    return {
+      id:   sessionStorage.getItem(SESSION_KEY),
+      name: sessionStorage.getItem(SESSION_NAME_KEY)
+    };
+  } catch(e) { return { id: null, name: null }; }
+}
+
+function saveSessionPlayer(id, name) {
+  try {
+    sessionStorage.setItem(SESSION_KEY, id);
+    sessionStorage.setItem(SESSION_NAME_KEY, name);
+  } catch(e) {}
+}
+
+function clearSessionPlayer() {
+  try {
+    sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(SESSION_NAME_KEY);
+  } catch(e) {}
+}
+
+// ── Player picker UI ──────────────────────────────────────────
+function showPlayerPicker() {
+  if (playerPollTimer) { clearTimeout(playerPollTimer); playerPollTimer = null; }
+  var picker = document.getElementById('player-picker');
+  var list   = document.getElementById('player-list');
+  picker.style.display = 'block';
+  list.innerHTML = '<div style="font-size:0.8rem;color:rgba(255,255,255,0.7);font-weight:300;">Loading players...</div>';
+
+  lmsRpc('', ['players', 0, 99]).then(function(data) {
+    var players = (data && data.result && data.result.players_loop) ? data.result.players_loop : [];
+    allKnownPlayers = players;
+    list.innerHTML = '';
+
+    // Fetch status for each to show who's playing
+    var checks = players.map(function(p) {
+      return lmsRpc(p.playerid, ['status', '-', 1, 'tags:']).then(function(d) {
+        return { player: p, mode: d && d.result ? d.result.mode : '' };
+      }).catch(function() { return { player: p, mode: '' }; });
+    });
+
+    Promise.all(checks).then(function(results) {
+      results.forEach(function(r) {
+        var isActive = r.player.playerid === activePlayerId;
+        var isPlaying = r.mode === 'play';
+        var isGroup = r.player.isgroup === 1 || r.player.isgroup === '1';
+
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.75rem;border-radius:4px;cursor:pointer;border:1px solid ' + (isActive ? 'var(--msk-accent)' : 'transparent') + ';background:' + (isActive ? 'rgba(201,168,76,0.08)' : 'transparent') + ';';
+        row.onmouseover = function() { if (!isActive) this.style.background = 'rgba(255,255,255,0.05)'; };
+        row.onmouseout  = function() { if (!isActive) this.style.background = 'transparent'; };
+
+        var dot = document.createElement('span');
+        dot.style.cssText = 'width:8px;height:8px;border-radius:50%;flex-shrink:0;background:' + (isPlaying ? '#c9a84c' : 'rgba(255,255,255,0.2)') + ';';
+
+        var label = document.createElement('span');
+        label.style.cssText = 'font-size:0.875rem;color:' + (isActive ? 'var(--msk-accent)' : 'var(--msk-text)') + ';font-weight:' + (isActive ? '500' : '300') + ';flex:1;';
+        label.textContent = r.player.name + (isGroup ? ' (Group)' : '') + (isPlaying ? ' ▶' : '');
+
+        row.appendChild(dot);
+        row.appendChild(label);
+
+        row.addEventListener('click', function() {
+          selectPlayer(r.player.playerid, r.player.name);
+        });
+
+        list.appendChild(row);
+      });
+    });
+  }).catch(function() {
+    list.innerHTML = '<div style="font-size:0.8rem;color:#e06c6c;">Could not load players</div>';
+    schedulePlayerPoll();
+  });
+}
+
+function hidePlayerPicker() {
+  document.getElementById('player-picker').style.display = 'none';
+  schedulePlayerPoll();
+}
+
+function selectPlayer(id, name) {
+  hidePlayerPicker();
+  saveSessionPlayer(id, name);
+  var changed = (id !== activePlayerId);
+  activePlayerId   = id;
+  activePlayerName = name;
+  updatePlayerDisplay(name);
+  if (changed && triggerRegen && autoRefreshActive) {
+    lastTrackTitle = null;
+    if (regenDebounce) clearTimeout(regenDebounce);
+    regenDebounce = setTimeout(function() {
+      fetchTrackInfo(activePlayerId).then(function(t) { generateCard(t); }).catch(function(){});
+    }, 2000);
+  }
+}
+
+// ── Player detection ──────────────────────────────────────────
+function findBestPlayer(players) {
+  // Check status of all players
+  var checks = players.map(function(p) {
+    return lmsRpc(p.playerid, ['status', '-', 1, 'tags:']).then(function(d) {
+      var res = d && d.result ? d.result : {};
+      return {
+        player:  p,
+        mode:    res.mode || '',
+        isGroup: p.isgroup === 1 || p.isgroup === '1'
+      };
+    }).catch(function() { return { player: p, mode: '', isGroup: false }; });
+  });
+
+  return Promise.all(checks).then(function(results) {
+    var playing = results.filter(function(r) { return r.mode === 'play'; });
+    if (playing.length > 0) {
+      // Prefer group player to avoid looping between synced members
+      var group = playing.find(function(r) { return r.isGroup; });
+      return group || playing[0];
+    }
+    var paused = results.find(function(r) { return r.mode === 'pause' || r.mode === 'stop'; });
+    return paused || results[0] || null;
+  });
+}
+
+function detectActivePlayer() {
+  if (playerPollTimer) { clearTimeout(playerPollTimer); playerPollTimer = null; }
+
+  // URL param permanently locks to a specific player
+  if (urlForcedPlayer) {
+    lmsRpc('', ['players', 0, 99]).then(function(data) {
+      var players = (data && data.result && data.result.players_loop) ? data.result.players_loop : [];
+      var match = players.find(function(p) { return p.playerid === urlForcedPlayer; });
+      if (match) setActivePlayer(match.playerid, match.name, false);
+    }).catch(function(e) {
+      console.error('NPS player check error:', e);
+      clearSessionPlayer();
+      detectActivePlayer();
+    }).then(schedulePlayerPoll);
+    return;
+  }
+
+  // Check if this session already has a chosen player
+  var session = getSessionPlayer();
+  if (session.id) {
+    // Verify it still exists and update display — don't auto-switch away
+    lmsRpc('', ['players', 0, 99]).then(function(data) {
+      var players = (data && data.result && data.result.players_loop) ? data.result.players_loop : [];
+      allKnownPlayers = players;
+      var match = players.find(function(p) { return p.playerid === session.id; });
+      if (match) {
+        // Session player still valid — stick with it, auto-generate
+        setActivePlayer(match.playerid, match.name, false);
+        fetchTrackInfo(match.playerid).then(function(t) { generateCard(t); }).catch(function(){});
+      } else {
+        // Session player no longer exists — clear and re-detect
+        clearSessionPlayer();
+        detectActivePlayer();
+        return;
+      }
+    }).catch(function(e) {
+      console.error('NPS player check error:', e);
+      clearSessionPlayer();
+      detectActivePlayer();
+    }).then(schedulePlayerPoll);
+    return;
+  }
+
+  // No session player — find the best one automatically
+  lmsRpc('', ['players', 0, 99]).then(function(data) {
+    var players = (data && data.result && data.result.players_loop) ? data.result.players_loop : [];
+    allKnownPlayers = players;
+    if (!players.length) {
+      document.getElementById('player-status').textContent = 'No players found';
+      return;
+    }
+    return findBestPlayer(players).then(function(result) {
+      if (result) {
+        saveSessionPlayer(result.player.playerid, result.player.name);
+        setActivePlayer(result.player.playerid, result.player.name, false);
+        fetchTrackInfo(result.player.playerid).then(function(t) { generateCard(t); }).catch(function(){});
+      }
+    });
+  }).catch(function() {
+    document.getElementById('player-status').textContent = 'Could not connect to Lyrion Music Server';
+  }).then(schedulePlayerPoll);
+}
+
+function schedulePlayerPoll() {
+  if (playerPollTimer) clearTimeout(playerPollTimer);
+  // Only poll to keep display fresh — don't auto-switch players
+  playerPollTimer = setTimeout(function() {
+    // Just refresh the player display name in case it changed
+    var session = getSessionPlayer();
+    if (!session.id) { detectActivePlayer(); return; }
+    lmsRpc('', ['players', 0, 99]).then(function(data) {
+      var players = (data && data.result && data.result.players_loop) ? data.result.players_loop : [];
+      allKnownPlayers = players;
+      var match = players.find(function(p) { return p.playerid === session.id; });
+      if (match) updatePlayerDisplay(match.name);
+    }).catch(function(){}).then(schedulePlayerPoll);
+  }, 10000);
+}
+
+function updatePlayerDisplay(name) {
+  var el = document.getElementById('player-status');
+  el.innerHTML = '&#9835;&nbsp;&nbsp;<strong style="color:var(--msk-text);font-weight:500;">' + name + '</strong>&nbsp;&nbsp;<span style="opacity:0.4">&middot;</span>&nbsp;&nbsp;Lyrion Music Server';
+  document.getElementById('btn-change-player').style.display = 'inline';
+}
+
+function setActivePlayer(id, name, triggerRegen) {
+  var changed = (id !== activePlayerId);
+  activePlayerId   = id;
+  activePlayerName = name;
+  updatePlayerDisplay(name);
+  if (changed || triggerRegen) {
+    lastTrackTitle = null;
+    if (regenDebounce) clearTimeout(regenDebounce);
+    regenDebounce = setTimeout(function() {
+      fetchTrackInfo(activePlayerId).then(function(t) { generateCard(t); }).catch(function(){});
+    }, 500);
+  }
+}
+// ── Track data store ─────────────────────────────────────────
+var currentTrack = null;
+
+function loadImage(url) {
+  return new Promise(function(resolve) {
+    var img = new Image();
+    img.onload  = function() { resolve(img); };
+    img.onerror = function() { resolve(null); };
+    // Fetch as blob first to avoid CORS tainting the canvas
+    // cache: 'no-store' ensures fresh artwork on every generate
+    fetch(url, { credentials: 'same-origin', cache: 'no-store' })
+      .then(function(r) { return r.blob(); })
+      .then(function(blob) { img.src = URL.createObjectURL(blob); })
+      .catch(function() { img.src = url; }); // fallback direct
+  });
+}
+
+function fetchTrackInfo(pid) {
+  return lmsRpc(pid, ['status', '-', 1, 'tags:cdegilopqrstuyAABEGIKNPSTVbhz124']).then(function(data) {
+    var loop = (data && data.result && data.result.playlist_loop && data.result.playlist_loop[0]) ? data.result.playlist_loop[0] : {};
+    var r    = (data && data.result) ? data.result : {};
+    var cacheBust = '&_t=' + Date.now();
+    var art  = loop.artwork_url || (loop.coverid
+      ? LMS_BASE + '/music/' + loop.coverid + '/cover.jpg?' + cacheBust
+      : LMS_BASE + '/music/current/cover.jpg?player=' + encodeURIComponent(pid) + cacheBust);
+    // Add cache-bust to artwork_url too if present
+    if (loop.artwork_url) { art = loop.artwork_url + (loop.artwork_url.indexOf('?') > -1 ? '&' : '?') + '_t=' + Date.now(); }
+    // Detect streaming service from extid or url and map to icon URL
+    var extid = loop.extid || loop.url || '';
+    // Service icons — all in plugin html/images folders, same pattern as Qobuz
+    // All icons from Material Skin SVG folder — all white tinted
+    var MS = LMS_BASE + '/material/html/images/';
+    var SERVICE_ICONS = {
+      qobuz:        MS + 'qobuz.svg',
+      bbcsounds:    MS + 'bbc-sounds.svg',
+      spotify:      MS + 'spotify.svg',
+      tidal:        MS + 'tidal.svg',
+      deezer:       MS + 'deezer.svg',
+      bandcamp:     MS + 'bandcamp.svg',
+      radioparadise:MS + 'radioparadise.svg',
+      soundcloud:   MS + 'soundcloud.svg',
+      iheartradio:  MS + 'iheartradio.svg',
+      tunein:       MS + 'tunein.svg',
+      mixcloud:     MS + 'mixcloud.svg',
+      napster:      MS + 'napster.svg',
+      youtube:      MS + 'youtube.svg',
+    };
+    var serviceIconUrl = null;
+    var serviceIconTint = true;  // all Material SVGs are single-colour, always tint white
+    if      (extid.indexOf('qobuz') > -1)                                    serviceIconUrl = SERVICE_ICONS.qobuz;
+    else if (extid.indexOf('bbc') > -1 || extid.indexOf('bbcsounds') > -1)  serviceIconUrl = SERVICE_ICONS.bbcsounds;
+    else if (extid.indexOf('spotify') > -1)                                  serviceIconUrl = SERVICE_ICONS.spotify;
+    else if (extid.indexOf('tidal') > -1)                                    serviceIconUrl = SERVICE_ICONS.tidal;
+    else if (extid.indexOf('deezer') > -1)                                   serviceIconUrl = SERVICE_ICONS.deezer;
+    else if (extid.indexOf('bandcamp') > -1 || extid.indexOf('bcbits') > -1) serviceIconUrl = SERVICE_ICONS.bandcamp;
+    else if (extid.indexOf('radioparadise') > -1 || extid.indexOf('radio-paradise') > -1) serviceIconUrl = SERVICE_ICONS.radioparadise;
+    else if (extid.indexOf('soundcloud') > -1)                               serviceIconUrl = SERVICE_ICONS.soundcloud;
+    else if (extid.indexOf('iheart') > -1)                                   serviceIconUrl = SERVICE_ICONS.iheartradio;
+    else if (extid.indexOf('tunein') > -1)                                   serviceIconUrl = SERVICE_ICONS.tunein;
+    else if (extid.indexOf('mixcloud') > -1)                                 serviceIconUrl = SERVICE_ICONS.mixcloud;
+    else if (extid.indexOf('napster') > -1)                                  serviceIconUrl = SERVICE_ICONS.napster;
+    else if (extid.indexOf('youtube') > -1)                                  serviceIconUrl = SERVICE_ICONS.youtube;
+    // Build sub-line — same priority logic as Material Skin
+    var subLine = null;
+    var subLineLabel = 'disc';
+    var lmsIsClassical = loop.isClassical && 1==parseInt(loop.isClassical);
+    if (lmsIsClassical) {
+      // Classical — use LMS isClassical flag (based on genre matching in LMS settings)
+      if (loop.work) {
+        subLine = loop.work;
+        if (loop.grouping && loop.grouping != loop.work) {
+          subLine += ' • ' + loop.grouping;
+        }
+      } else if (loop.grouping) {
+        subLine = loop.grouping;
+      }
+      if (loop.performance) {
+        subLine = (subLine ? subLine + ' • ' : '') + loop.performance;
+      }
+      subLineLabel = null;  // prefix handled in renderer as 'work'
+    } else if (loop.grouping) {
+      subLine = loop.grouping;
+      subLineLabel = null;  // grouping shown with 'subtitle' prefix
+    } else if (loop.discsubtitle) {
+      subLine = loop.discsubtitle;
+      subLineLabel = null;  // shown with 'subtitle' prefix same as grouping
+    // disc number fallback removed — not shown if no subtitle/grouping
+    }
+        // Artist: use trackartist as fallback (classical works often have no 'artist')
+    var artist = loop.artist || loop.trackartist || loop.albumartist || '';
+    return { title: loop.title || loop.current_title || 'Unknown Track', artist: artist, album: loop.album || '', year: (loop.year && loop.year != '0') ? loop.year : '', playerName: r.player_name || 'My Player', artworkUrl: art, serviceIconUrl: serviceIconUrl, serviceIconTint: serviceIconTint, subLine: subLine, subLineLabel: subLineLabel, composer: lmsIsClassical ? (loop.composer || null) : null, isClassical: lmsIsClassical };
+  });
+}
+
+// ── Theme definitions ─────────────────────────────────────────
+var THEMES = {
+  midnight: { bg: '#1a1a1a', panelBg: '#181818', panelBg2: '#141414',
+    accent: '#c9a84c', nowPlaying: '#c9a84c', title: '#ffffff',
+    artist: '#ffffff', album: 'rgba(255,255,255,0.8)', year: 'rgba(255,255,255,0.5)',
+    byFrom: 'rgba(255,255,255,0.45)', barBg: '#111111', barText: 'rgba(255,255,255,0.4)',
+    barName: '#c9a84c' }
+};
+
+
+// ── Pure canvas renderer ──────────────────────────────────────
+function renderToCanvas(track, artImg, serviceImg, lyrionImg) {
+  var W     = 1200, H = 630;
+  var BAR_H = 0;
+  var ART_W = W / 2;
+  var PAD   = 50;
+  var R     = 16;
+
+  var canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  var ctx = canvas.getContext('2d', { alpha: true, willReadFrequently: false });
+  var t = THEMES['midnight'];
+
+  // Overlay darkness per theme
+  var overlayAlpha = 0.55;
+
+  // Fill solid background — no rounded clip, square corners for clean export
+  ctx.fillStyle = t.bg;
+  ctx.fillRect(0, 0, W, H);
+  ctx.save();
+
+  // ── 1. Full card background — blurred artwork ──
+  ctx.fillStyle = t.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  if (artImg) {
+    // Draw blurred background — use ctx.filter if available (desktop), else multi-pass scale (mobile)
+    var bgScale = Math.max(W / artImg.width, (H - BAR_H) / artImg.height);
+    var bgW = artImg.width * bgScale, bgH = artImg.height * bgScale;
+    var bx = (W - bgW) / 2, by = ((H - BAR_H) - bgH) / 2;
+
+    // Multi-pass scale blur — works on all browsers including mobile
+    // Use square canvases to ensure full coverage
+    var sizes = [2, 8, 20, 60, 160];
+    var prev = document.createElement('canvas');
+    prev.width = sizes[0]; prev.height = sizes[0];
+    prev.getContext('2d').drawImage(artImg, 0, 0, sizes[0], sizes[0]);
+    for (var p = 1; p < sizes.length; p++) {
+      var next = document.createElement('canvas');
+      next.width = sizes[p]; next.height = sizes[p];
+      next.getContext('2d').drawImage(prev, 0, 0, sizes[p], sizes[p]);
+      prev = next;
+    }
+    ctx.save();
+    ctx.globalAlpha = 0.8;
+    ctx.drawImage(prev, 0, 0, W, H);
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  // ── 2. Dark overlay ──
+  ctx.fillStyle = 'rgba(0,0,0,' + (overlayAlpha - 0.1) + ')';
+  ctx.fillRect(0, 0, W, H - BAR_H);
+
+  // ── 3. Clean artwork — left half, no effects, centred ──
+  if (artImg) {
+    var margin  = 30;
+    var maxArtH = H - margin * 2;
+    var maxArtW = ART_W - margin * 2;
+    var artScale = Math.min(maxArtW / artImg.width, maxArtH / artImg.height);
+    var artW = artImg.width  * artScale;
+    var artH = artImg.height * artScale;
+    var ax = (ART_W - artW) / 2;
+    var ay = (H - artH) / 2;
+
+    // Drop shadow
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.9)';
+    ctx.shadowBlur = 40; ctx.shadowOffsetX = 6; ctx.shadowOffsetY = 6;
+    roundRect(ctx, ax, ay, artW, artH, 8);
+    ctx.fillStyle = 'rgba(0,0,0,0.01)'; ctx.fill();
+    ctx.restore();
+
+    // Clean artwork — no filter
+    ctx.save();
+    roundRect(ctx, ax, ay, artW, artH, 8);
+    ctx.clip();
+    ctx.drawImage(artImg, ax, ay, artW, artH);
+    ctx.restore();
+  }
+
+  // ── 3b & 3c. Service icon + Lyrion logo — top right of card ──
+  // Both sit in a row: [service icon] [lyrion wordmark]
+  var TOP_PAD  = 20;
+  var RIGHT_PAD = 24;
+  var ICON_H   = 26;  // height for both logos — match Lyrion text height
+  var GAP      = 12;  // gap between service icon and Lyrion logo
+
+  // Lyrion wordmark: 128x26 aspect ratio
+  var LY_W = Math.round(ICON_H * (128 / 26));
+  var LY_H = ICON_H;
+  var llx  = W - LY_W - RIGHT_PAD;
+  var lly  = TOP_PAD;
+
+  // Draw Lyrion logo tinted white using source-atop
+  if (lyrionImg) {
+    var off = document.createElement('canvas');
+    off.width = LY_W; off.height = LY_H;
+    var oc = off.getContext('2d');
+    oc.drawImage(lyrionImg, 0, 0, LY_W, LY_H);
+    oc.globalCompositeOperation = 'source-atop';
+    oc.fillStyle = '#ffffff';
+    oc.fillRect(0, 0, LY_W, LY_H);
+    ctx.save();
+    ctx.globalAlpha = 0.7;
+    ctx.drawImage(off, llx, lly);
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  // Service icon — tint white if needed, else draw as-is
+  if (serviceImg) {
+    var SVC_SIZE = ICON_H;
+    var sx = llx - GAP - SVC_SIZE;
+    var sy = lly;
+    ctx.save();
+    ctx.globalAlpha = 0.7;
+    if (track.serviceIconTint) {
+      var svcOff = document.createElement('canvas');
+      svcOff.width = SVC_SIZE; svcOff.height = SVC_SIZE;
+      var svcOc = svcOff.getContext('2d');
+      svcOc.drawImage(serviceImg, 0, 0, SVC_SIZE, SVC_SIZE);
+      svcOc.globalCompositeOperation = 'source-atop';
+      svcOc.fillStyle = '#ffffff';
+      svcOc.fillRect(0, 0, SVC_SIZE, SVC_SIZE);
+      ctx.drawImage(svcOff, sx, sy);
+    } else {
+      ctx.beginPath();
+      ctx.roundRect(sx, sy, SVC_SIZE, SVC_SIZE, 4);
+      ctx.clip();
+      ctx.drawImage(serviceImg, sx, sy, SVC_SIZE, SVC_SIZE);
+    }
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  // ── 4. Text — right half, directly on background ──
+  var tx    = ART_W + PAD;
+  var textW = W - ART_W - PAD * 2;
+  var isClassical = !!(track.isClassical);
+  var LINE_GAP = 18;
+  var LABEL_ALPHA = 'rgba(255,255,255,0.45)';
+  var FONT = 'px Roboto, sans-serif';
+
+  // Helper: draw a label + value line, returns value width
+  function drawLabelLine(label, value, y, fontSize) {
+    var labelSize = Math.round(fontSize * 0.85);
+    ctx.font = '300 ' + labelSize + FONT;
+    ctx.fillStyle = LABEL_ALPHA;
+    ctx.letterSpacing = '0em';
+    ctx.fillText(label, tx, y);
+    var lw = ctx.measureText(label).width + 10;
+    ctx.font = '400 ' + fontSize + FONT;
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.fillText(value, tx + lw, y);
+  }
+
+  // Auto-scale helper
+  function scaleFont(text, startSize, minSize, prefix) {
+    var fs = startSize;
+    ctx.font = '400 ' + fs + FONT;
+    var check = prefix ? prefix + '  ' + text : text;
+    while (ctx.measureText(check).width > textW && fs > minSize) {
+      fs--;
+      ctx.font = '400 ' + fs + FONT;
+    }
+    return fs;
+  }
+
+  // Auto-scale title
+  var titleFontSize = 32;
+  ctx.font = '700 ' + titleFontSize + FONT;
+  var titleLines = wrapText(ctx, track.title, textW);
+  while (titleLines.length > 2 && titleFontSize > 20) {
+    titleFontSize -= 2;
+    ctx.font = '700 ' + titleFontSize + FONT;
+    titleLines = wrapText(ctx, track.title, textW);
+  }
+  while (titleLines.length === 1 && ctx.measureText(titleLines[0]).width > textW && titleFontSize > 20) {
+    titleFontSize -= 2;
+    ctx.font = '700 ' + titleFontSize + FONT;
+    titleLines = wrapText(ctx, track.title, textW);
+  }
+  var titleLineH = titleFontSize * 1.15;
+  var nTitleLines = Math.min(titleLines.length, 2);
+
+  var artistFontSize = scaleFont(track.artist, 26, 14, isClassical ? 'performed by' : 'by');
+  var albumFontSize  = 22;  // wrapping handles long titles — no need to scale to fit
+  // Pre-calc album lines for height
+  var _albumYearText = track.album + (track.year ? '  (' + track.year + ')' : '');
+  ctx.font = '400 ' + albumFontSize + 'px Roboto, sans-serif';
+  var _albumFromW = ctx.measureText('from').width + 10 + 10;
+  var _albumLines = Math.min(wrapText(ctx, _albumYearText, textW - _albumFromW).length, 2);
+  var albumLineHPre = albumFontSize + LINE_GAP;
+  var composerFontSize = isClassical ? scaleFont(track.composer, 22, 12, 'composed by') : 0;
+  var subFontSize    = track.subLine ? scaleFont(track.subLine, 22, 12, null) : 0;
+
+  // Total height for vertical centring
+  var totalTextH = 38                          // NOW PLAYING (20px + gap)
+    + nTitleLines * titleLineH + 32            // title + gap
+    + artistFontSize + LINE_GAP               // artist line
+    + (isClassical ? composerFontSize + LINE_GAP : 0)  // composed by (classical)
+    + (isClassical && track.subLine ? subFontSize + LINE_GAP : 0)  // work (classical, before album)
+    + (_albumLines * albumLineHPre)            // from album (1-2 lines, gap included in albumLineHPre)
+    + (!isClassical && track.subLine ? subFontSize + LINE_GAP : 0);  // subtitle/disc (non-classical)
+  var ty = (H - totalTextH) / 2;
+
+  // NOW PLAYING
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.font = '500 20' + FONT;
+  ctx.letterSpacing = '0.15em';
+  ctx.fillText('NOW PLAYING', tx, ty + 20);
+  ty += 38;
+
+  // Track title
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 ' + titleFontSize + FONT;
+  ctx.letterSpacing = '-0.01em';
+  titleLines.slice(0, 2).forEach(function(line) {
+    ctx.fillText(line, tx, ty + titleLineH);
+    ty += titleLineH;
+  });
+  ty += 32;
+  ctx.letterSpacing = '0em';
+
+  // performed by / by — Artist
+  drawLabelLine(isClassical ? 'performed by' : 'by', track.artist, ty + artistFontSize, artistFontSize);
+  ty += artistFontSize + LINE_GAP;
+
+  // composed by — Composer (classical only)
+  if (isClassical && track.composer) {
+    drawLabelLine('composed by', track.composer, ty + composerFontSize, composerFontSize);
+    ty += composerFontSize + LINE_GAP;
+  }
+
+  // work — Work/Grouping (classical only, before album)
+  if (isClassical && track.subLine) {
+    drawLabelLine('work', track.subLine, ty + subFontSize, subFontSize);
+    ty += subFontSize + LINE_GAP;
+  }
+
+  // from — Album (Year)
+  // Album — wrap to max 2 lines, year on first line if fits, else second
+  var albumYearText = track.album + (track.year ? '  (' + track.year + ')' : '');
+  var fromLabelSize2 = Math.round(albumFontSize * 0.85);
+  ctx.font = '300 ' + fromLabelSize2 + 'px Roboto, sans-serif';
+  var fromLabelW2 = ctx.measureText('from').width + 10;
+  var albumTextW = textW - fromLabelW2;
+  ctx.font = '400 ' + albumFontSize + 'px Roboto, sans-serif';
+  var albumLines = wrapText(ctx, albumYearText, albumTextW);
+  // Scale down if more than 2 lines
+  while (albumLines.length > 2 && albumFontSize > 12) {
+    albumFontSize--;
+    ctx.font = '400 ' + albumFontSize + 'px Roboto, sans-serif';
+    albumLines = wrapText(ctx, albumYearText, albumTextW);
+  }
+  // Draw 'from' label
+  ctx.font = '300 ' + Math.round(albumFontSize * 0.85) + 'px Roboto, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillText('from', tx, ty + albumFontSize);
+  // Draw album lines — same spacing as all other lines (fontSize + LINE_GAP per line)
+  ctx.font = '400 ' + albumFontSize + 'px Roboto, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  albumLines.slice(0, 2).forEach(function(line, i) {
+    ctx.fillText(line, tx + fromLabelW2, ty + albumFontSize + (i * (albumFontSize + LINE_GAP)));
+  });
+  ty += Math.min(albumLines.length, 2) * (albumFontSize + LINE_GAP);
+
+  // Non-classical sub-line — grouping / discsubtitle / disc number
+  if (!isClassical && track.subLine) {
+    if (track.subLineLabel) {
+      // disc prefix — only used for disc subtitle tag
+      drawLabelLine(track.subLineLabel, track.subLine, ty + subFontSize, subFontSize);
+    } else {
+      // grouping — show with 'subtitle' prefix
+      drawLabelLine('subtitle', track.subLine, ty + subFontSize, subFontSize);
+    }
+  }
+
+  // ── 5. Player bar removed ──
+
+  ctx.restore();
+  return canvas;
+}
+
+// ── Helper: rounded rect path ─────────────────────────────────
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+// ── Helper: word wrap ─────────────────────────────────────────
+function wrapText(ctx, text, maxW) {
+  var words = text.split(' ');
+  var lines = [], line = '';
+  words.forEach(function(word) {
+    var test = line ? line + ' ' + word : word;
+    if (ctx.measureText(test).width > maxW && line) {
+      lines.push(line); line = word;
+    } else { line = test; }
+  });
+  if (line) lines.push(line);
+  return lines;
+}
+
+// ── Preview: show rendered canvas as a right-clickable img ───
+function placeCard(canvas) {
+  var wrap = document.getElementById('preview-wrap');
+  wrap.innerHTML = '';
+
+  // No compositing needed — canvas is already solid with no transparency
+  var finalCanvas = canvas;
+
+  var img = document.createElement('img');
+  img.src = finalCanvas.toDataURL('image/png');
+  // Scale to viewport width maintaining 1200:630 aspect ratio
+  img.style.cssText = 'width:100%;max-width:100%;height:auto;border-radius:12px;display:block;cursor:context-menu;box-sizing:border-box;';
+  img.title = 'Right-click → Copy Image';
+  wrap.appendChild(img);
+  // Start auto-refresh after first card is rendered, with small delay to ensure activePlayerId is set
+  if (!autoRefreshActive) { setTimeout(function() { if (!autoRefreshActive) startAutoRefresh(); }, 1000); }
+
+  // Show the hint and action row — different text for mobile vs desktop
+  var hint = document.getElementById('card-hint');
+  var isMobile = window.innerWidth < 600 || ('ontouchstart' in window);
+  hint.innerHTML = isMobile
+    ? 'Hold on image &rarr; Save Image, then share anywhere. Or use Save Image to download.'
+    : 'Right-click the image &rarr; Copy Image, then paste anywhere. Or use Save Image to download.';
+  hint.style.display = 'block';
+  document.getElementById('action-row').classList.add('visible');
+}
+
+// ── Generate ──────────────────────────────────────────────────
+function generateCard(track) {
+  setStatus('Loading artwork...');
+  var LMS_BASE_URL = window.location.protocol + '//' + window.location.host;
+  var lyrionLogoUrl = LMS_BASE_URL + '/material/html/images/lyrion-logo.svg';
+  return Promise.all([
+    loadImage(track.artworkUrl),
+    track.serviceIconUrl ? loadImage(track.serviceIconUrl) : Promise.resolve(null),
+    loadImage(lyrionLogoUrl)
+  ]).then(function(results) {
+    var artImg = results[0];
+    var serviceImg = results[1];
+    var lyrionImg = results[2];
+    setStatus('Rendering...');
+    var canvas = renderToCanvas(track, artImg, serviceImg, lyrionImg);
+    currentTrack = track;
+    currentTrack._canvas = canvas;
+    placeCard(canvas);
+    setStatus('Card ready — updates automatically when track changes.');
+    return canvas;
+  });
+}
+
+function triggerDownload(canvas) {
+  var a = document.createElement('a');
+  var ts = new Date().toISOString().slice(0,19).replace(/[T:]/g,'-');
+  a.download = 'now-playing-' + ts + '.png';
+  var imgEl = document.querySelector('#preview-wrap img');
+  a.href = imgEl ? imgEl.src : currentTrack._canvas.toDataURL('image/png');
+  a.click();
+}
+
+
+
+
+document.getElementById('btn-download').addEventListener('click', function() {
+  if (!currentTrack || !currentTrack._canvas) { setStatus('Generate a card first.'); return; }
+  triggerDownload(currentTrack._canvas);
+  setStatus('Image saved — share it anywhere!');
+});
+
+
+
+// ── Auto-refresh ─────────────────────────────────────────────
+var autoRefreshTimer  = null;
+var autoRefreshActive = false;
+var lastTrackTitle    = null;
+
+function startAutoRefresh() {
+  autoRefreshActive = true;
+  var btn = document.getElementById('btn-autorefresh');
+  if (btn) {
+    btn.textContent = '⏸ Auto';
+    btn.style.color = '#ffffff';
+    btn.style.borderColor = '#ffffff';
+  }
+  setStatus('Card ready — updates automatically when track changes.');
+  pollForTrackChange();
+}
+
+function stopAutoRefresh() {
+  autoRefreshActive = false;
+  if (autoRefreshTimer) { clearTimeout(autoRefreshTimer); autoRefreshTimer = null; }
+  var btn = document.getElementById('btn-autorefresh');
+  btn.textContent = '▶ Auto';
+  btn.style.color = 'rgba(255,255,255,0.7)';
+  btn.style.borderColor = 'var(--msk-border)';
+  setStatus('Auto-refresh stopped.');
+}
+
+function pollForTrackChange() {
+  if (!autoRefreshActive || !activePlayerId) return;
+  lmsRpc(activePlayerId, ['status', '-', 1, 'tags:cdegilopqrstuyAABEGIKNPSTVbhz124']).then(function(data) {
+    var loop = (data && data.result && data.result.playlist_loop && data.result.playlist_loop[0]) ? data.result.playlist_loop[0] : {};
+    var title = loop.title || loop.current_title || '';
+    var mode  = data && data.result ? data.result.mode : '';
+    if (title && title !== lastTrackTitle && mode === 'play') {
+      lastTrackTitle = title;
+      fetchTrackInfo(activePlayerId).then(function(t) {
+        generateCard(t);
+      });
+    }
+    if (autoRefreshActive) {
+      autoRefreshTimer = setTimeout(pollForTrackChange, 10000);
+    }
+  }).catch(function() {
+    if (autoRefreshActive) {
+      autoRefreshTimer = setTimeout(pollForTrackChange, 15000);
+    }
+  });
+}
+
+
+// ── Material Skin accent colour detection ─────────────────────
+// Try to read the accent colour from Material Skin's CSS variables if available
+function detectMaterialSkinAccent() {
+  try {
+    var bodyStyle = getComputedStyle(document.documentElement);
+    // Material Skin sets --primary-color on :root when embedded
+    var primary = bodyStyle.getPropertyValue('--primary-color').trim();
+    if (primary && primary.length > 0) {
+      // Apply to our CSS variables and theme definitions
+      document.documentElement.style.setProperty('--msk-accent', primary);
+      Object.keys(THEMES).forEach(function(k) {
+        THEMES[k].accent  = primary;
+        THEMES[k].nowPlaying = primary;
+        THEMES[k].barName = primary;
+      });
+    }
+  } catch(e) { /* ignore — not embedded in Material Skin */ }
+}
+
+detectMaterialSkinAccent();
+detectActivePlayer();
+
+// Pause polling when tab is hidden, resume when visible
+document.addEventListener('visibilitychange', function() {
+  if (document.hidden) {
+    // Tab hidden — stop polling
+    if (autoRefreshActive) {
+      if (autoRefreshTimer) { clearTimeout(autoRefreshTimer); autoRefreshTimer = null; }
+    }
+  } else {
+    // Tab visible again — resume polling if it was active
+    if (autoRefreshActive && !autoRefreshTimer) {
+      pollForTrackChange();
+    }
+  }
+});
+
+document.getElementById('btn-generate').addEventListener('click', function() {
+  if (!activePlayerId) { setStatus('No player selected.', '#f66'); return; }
+  fetchTrackInfo(activePlayerId)
+    .then(function(t) { return generateCard(t); })
+    .catch(function(e) { setStatus('Error: ' + e.message, '#f66'); });
+});
+
+document.getElementById('btn-autorefresh').addEventListener('click', function() {
+  if (autoRefreshActive) { stopAutoRefresh(); } else { startAutoRefresh(); }
+});
+</script>
+</body>
+</html>

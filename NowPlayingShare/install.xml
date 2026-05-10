@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<extension>
+
+<id>5480df5a-3a7d-417c-8551-f0146462c632</id>
+
+<name>NowPlayingShare</name>
+
+<module>Plugins::NowPlayingShare::Plugin</module>
+
+<version>2.4.6</version>
+
+<description>Plugin to share what you are playing</description>
+
+<creator>CrystalGipsy</creator>
+
+<icon>plugins/NowPlayingShare/html/images/NowPlayingShareIcon.png</icon>
+
+<defaultState>enabled</defaultState>
+
+<targetApplication>
+
+<id>SlimServer</id>
+
+<minVersion>9.0.0</minVersion>
+
+<maxVersion>*</maxVersion>
+
+</targetApplication>
+
+<optionsURL>plugins/NowPlayingShare/index.html</optionsURL>
+
+</extension>
