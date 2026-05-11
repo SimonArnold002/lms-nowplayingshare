@@ -27,8 +27,9 @@ sub initPlugin {
     Slim::Web::Pages->addPageLinks(
         'plugins', { 'PLUGIN_NOW_PLAYING_SHARE' => 'plugins/NowPlayingShare/index.html' }
     );
+    # _svg.png for Extras menu icon (Material Skin reads the .svg alongside it)
     Slim::Web::Pages->addPageLinks(
-        'icons', { 'PLUGIN_NOW_PLAYING_SHARE' => 'plugins/NowPlayingShare/html/images/NowPlayingShareIcon.png' }
+        'icons', { 'PLUGIN_NOW_PLAYING_SHARE' => 'plugins/NowPlayingShare/html/images/NowPlayingShareIcon_svg.png' }
     );
 
     $log->info('NowPlayingShare plugin initialised');
@@ -43,8 +44,9 @@ sub webPages {
         Slim::Web::Pages->addPageLinks(
             'plugins', { 'PLUGIN_NOW_PLAYING_SHARE' => 'plugins/NowPlayingShare/index.html' }
         );
+        # _svg.png for Extras menu icon (Material Skin reads the .svg alongside it)
         Slim::Web::Pages->addPageLinks(
-            'icons', { 'PLUGIN_NOW_PLAYING_SHARE' => 'plugins/NowPlayingShare/html/images/NowPlayingShareIcon.png' }
+            'icons', { 'PLUGIN_NOW_PLAYING_SHARE' => 'plugins/NowPlayingShare/html/images/NowPlayingShareIcon_svg.png' }
         );
     } else {
         Slim::Web::Pages->addPageLinks('plugins', { 'PLUGIN_NOW_PLAYING_SHARE' => undef });

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Now Playing Share v2.4.6 - Lyrion</title>
+<title>Now Playing Share v2.5.2 - Lyrion</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -141,7 +141,7 @@ select:focus, button:focus { outline: 2px solid rgba(255,255,255,0.5); outline-o
   <div class="logo">&#9835;</div>
   <div>
     <h1>Now Playing Share</h1>
-    <p>Generate a shareable card from the current track &nbsp;<span style="opacity:0.35">v2.4.6</span></p>
+    <p>Generate a shareable card from the current track &nbsp;<span style="opacity:0.35">v2.5.2</span></p>
   </div>
 </header>
 <div class="controls">
@@ -210,9 +210,8 @@ select:focus, button:focus { outline: 2px solid rgba(255,255,255,0.5); outline-o
   </div>
 </template>
 <div class="tip">
-  <strong>Tip:</strong> Bookmark
-  <code>http://[lms-ip]:9000/plugins/NowPlayingShare/index.html?player=PLAYERID</code>
-  to open with your player pre-selected.
+  <strong>Tip:</strong> Bookmark this URL to open with your player pre-selected:<br>
+  <code id="bookmark-url" style="word-break:break-all;display:block;margin-top:0.3rem;font-size:0.75rem;"></code>
 </div>
 <script>
 var LMS_BASE = window.location.origin;
@@ -375,7 +374,10 @@ function detectActivePlayer() {
     lmsRpc('', ['players', 0, 99]).then(function(data) {
       var players = (data && data.result && data.result.players_loop) ? data.result.players_loop : [];
       var match = players.find(function(p) { return p.playerid === urlForcedPlayer; });
-      if (match) setActivePlayer(match.playerid, match.name, false);
+      if (match) {
+        setActivePlayer(match.playerid, match.name, false);
+        fetchTrackInfo(match.playerid).then(function(t) { generateCard(t); }).catch(function(){});
+      }
     }).catch(function(e) {
       console.error('NPS player check error:', e);
       clearSessionPlayer();
@@ -447,6 +449,7 @@ function schedulePlayerPoll() {
 }
 
 function updatePlayerDisplay(name) {
+  updateBookmarkUrl();
   var el = document.getElementById('player-status');
   el.innerHTML = '&#9835;&nbsp;&nbsp;<strong style="color:var(--msk-text);font-weight:500;">' + name + '</strong>&nbsp;&nbsp;<span style="opacity:0.4">&middot;</span>&nbsp;&nbsp;Lyrion Music Server';
   document.getElementById('btn-change-player').style.display = 'inline';
@@ -913,8 +916,7 @@ function placeCard(canvas) {
 // ── Generate ──────────────────────────────────────────────────
 function generateCard(track) {
   setStatus('Loading artwork...');
-  var LMS_BASE_URL = window.location.protocol + '//' + window.location.host;
-  var lyrionLogoUrl = LMS_BASE_URL + '/material/html/images/lyrion-logo.svg';
+  var lyrionLogoUrl = LMS_BASE + '/material/html/images/lyrion-logo.svg';
   return Promise.all([
     loadImage(track.artworkUrl),
     track.serviceIconUrl ? loadImage(track.serviceIconUrl) : Promise.resolve(null),
@@ -1020,6 +1022,14 @@ function detectMaterialSkinAccent() {
       });
     }
   } catch(e) { /* ignore — not embedded in Material Skin */ }
+}
+
+// Set dynamic bookmark URL — updated when player is detected
+function updateBookmarkUrl() {
+  var bookmarkEl = document.getElementById('bookmark-url');
+  if (bookmarkEl && activePlayerId) {
+    bookmarkEl.textContent = window.location.origin + '/plugins/NowPlayingShare/index.html?player=' + activePlayerId;
+  }
 }
 
 detectMaterialSkinAccent();
