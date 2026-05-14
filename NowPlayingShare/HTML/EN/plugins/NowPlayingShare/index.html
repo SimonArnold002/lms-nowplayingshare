@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Now Playing Share v2.5.2 - Lyrion</title>
+<title>Now Playing Share v2.5.4 - Lyrion</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -141,7 +141,7 @@ select:focus, button:focus { outline: 2px solid rgba(255,255,255,0.5); outline-o
   <div class="logo">&#9835;</div>
   <div>
     <h1>Now Playing Share</h1>
-    <p>Generate a shareable card from the current track &nbsp;<span style="opacity:0.35">v2.5.2</span></p>
+    <p>Generate a shareable card from the current track &nbsp;<span style="opacity:0.35">v2.5.4</span></p>
   </div>
 </header>
 <div class="controls">
@@ -211,7 +211,7 @@ select:focus, button:focus { outline: 2px solid rgba(255,255,255,0.5); outline-o
 </template>
 <div class="tip">
   <strong>Tip:</strong> Bookmark this URL to open with your player pre-selected:<br>
-  <code id="bookmark-url" style="word-break:break-all;display:block;margin-top:0.3rem;font-size:0.75rem;"></code>
+  <a id="bookmark-url" href="#" target="_blank" style="word-break:break-all;display:block;margin-top:0.3rem;font-size:0.75rem;color:#c9a84c;"></a>
 </div>
 <script>
 var LMS_BASE = window.location.origin;
@@ -1028,7 +1028,9 @@ function detectMaterialSkinAccent() {
 function updateBookmarkUrl() {
   var bookmarkEl = document.getElementById('bookmark-url');
   if (bookmarkEl && activePlayerId) {
-    bookmarkEl.textContent = window.location.origin + '/plugins/NowPlayingShare/index.html?player=' + activePlayerId;
+    var url = window.location.origin + '/plugins/NowPlayingShare/index.html?player=' + activePlayerId;
+    bookmarkEl.textContent = url;
+    bookmarkEl.href = url;
   }
 }
 
