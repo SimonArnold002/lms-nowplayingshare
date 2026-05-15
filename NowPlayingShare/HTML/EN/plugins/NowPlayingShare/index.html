@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Now Playing Share v2.5.5 - Lyrion</title>
+<title>Now Playing Share v2.5.9 - Lyrion</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -141,7 +141,7 @@ select:focus, button:focus { outline: 2px solid rgba(255,255,255,0.5); outline-o
   <div class="logo">&#9835;</div>
   <div>
     <h1>Now Playing Share</h1>
-    <p>Generate a shareable card from the current track &nbsp;<span style="opacity:0.35">v2.5.5</span></p>
+    <p>Generate a shareable card from the current track &nbsp;<span style="opacity:0.35">v2.5.9</span></p>
   </div>
 </header>
 <div class="controls">
@@ -655,10 +655,10 @@ function renderToCanvas(track, artImg, serviceImg, lyrionImg) {
 
   // ── 3b & 3c. Service icon + Lyrion logo — top right of card ──
   // Both sit in a row: [service icon] [lyrion wordmark]
-  var TOP_PAD  = 20;
-  var RIGHT_PAD = 24;
-  var ICON_H   = 26;  // height for both logos — match Lyrion text height
-  var GAP      = 12;  // gap between service icon and Lyrion logo
+  var TOP_PAD  = 30;
+  var RIGHT_PAD = 50;  // well clear of right edge for social media
+  var ICON_H   = 46;  // noticeably larger
+  var GAP      = 16;  // gap between service icon and Lyrion logo
 
   // Lyrion wordmark: 128x26 aspect ratio
   var LY_W = Math.round(ICON_H * (128 / 26));
