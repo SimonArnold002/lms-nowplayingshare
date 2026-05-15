@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Now Playing Share v2.5.4 - Lyrion</title>
+<title>Now Playing Share v2.5.5 - Lyrion</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -141,7 +141,7 @@ select:focus, button:focus { outline: 2px solid rgba(255,255,255,0.5); outline-o
   <div class="logo">&#9835;</div>
   <div>
     <h1>Now Playing Share</h1>
-    <p>Generate a shareable card from the current track &nbsp;<span style="opacity:0.35">v2.5.4</span></p>
+    <p>Generate a shareable card from the current track &nbsp;<span style="opacity:0.35">v2.5.5</span></p>
   </div>
 </header>
 <div class="controls">
@@ -162,7 +162,7 @@ select:focus, button:focus { outline: 2px solid rgba(255,255,255,0.5); outline-o
 </div>
 
 <div id="card-hint" style="display:none;width:100%;max-width:680px;font-size:0.78rem;color:rgba(255,255,255,0.8);font-weight:400;letter-spacing:0.02em;margin-bottom:0.6rem;">
-  Right-click the image &rarr; Copy Image, then paste anywhere. Or use Save Image to download.
+  Hold on image &rarr; Copy Image, then share anywhere. Or use Save Image to download to device.
 </div>
 <div id="preview-wrap">
   <div class="placeholder">
@@ -907,8 +907,8 @@ function placeCard(canvas) {
   var hint = document.getElementById('card-hint');
   var isMobile = window.innerWidth < 600 || ('ontouchstart' in window);
   hint.innerHTML = isMobile
-    ? 'Hold on image &rarr; Save Image, then share anywhere. Or use Save Image to download.'
-    : 'Right-click the image &rarr; Copy Image, then paste anywhere. Or use Save Image to download.';
+    ? 'Hold on image &rarr; Copy Image, then share anywhere. Or use Save Image to download to device.'
+    : 'Hold on image &rarr; Copy Image, then share anywhere. Or use Save Image to download to device.';
   hint.style.display = 'block';
   document.getElementById('action-row').classList.add('visible');
 }
