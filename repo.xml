@@ -6,7 +6,7 @@
     <plugin name="NowPlayingShare" version="2.5.9" minTarget="9.0.0" maxTarget="*">
       <title lang="EN">Now Playing Share</title>
       <desc lang="EN">Generate a shareable card image from your currently playing track. Shows album art, track title, artist and album with streaming service logo.</desc>
-      <url>https://github.com/SimonArnold002/lms-nowplayingshare/raw/main/NowPlayingShare-plugin.zip</url>
+      <url>https://raw.githubusercontent.com/SimonArnold002/lms-nowplayingshare/dev/NowPlayingShare-plugin.zip</url>
       <creator>CrystalGipsy</creator>
       <email></email>
       <sha>1263b5380bcf81ee705b54bbecb611f99e44b7e7</sha>
