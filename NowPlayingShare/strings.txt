@@ -1,20 +1,27 @@
 PLUGIN_NOW_PLAYING_SHARE
 	EN	Now Playing Share
+	NL	Deel Speelt Nu
 
 PLUGIN_NOW_PLAYING_SHARE_DESC
 	EN	Generate a shareable image of your currently playing track.
+	NL	Genereer een afbeelding die je kan delen van het huidige nummer.
 
 PLUGIN_NOW_PLAYING_SHARE_GENERATE
 	EN	Generate Share Image
+	NL	Genereer Afbeelding
 
 PLUGIN_NOW_PLAYING_SHARE_COPY
 	EN	Copy Image
+	NL	Kopieer Afbeelding
 
 PLUGIN_NOW_PLAYING_SHARE_COPIED
 	EN	Copied!
+	NL	Gekopieerd!
 
 PLUGIN_NOW_PLAYING_SHARE_NOTHING_PLAYING
 	EN	Nothing is currently playing.
+	NL	Er wordt momenteel niets afgespeeld.
 
 PLUGIN_NOW_PLAYING_SHARE_SELECT_PLAYER
 	EN	Select a player above to generate a share image.
+	NL	Selecteer een muziekspeler om een afbeelding te genereren.
